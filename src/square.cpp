@@ -1,11 +1,10 @@
 #include "../include/square.h"
 #include <stdexcept>
 
-Square::Square(Index idx){
+Square::Square(Index idx)
+:_index(idx){
     if (idx >= 64) {
         throw std::out_of_range("Square index must be 0..63");
-    } else {
-        _index = idx;
     }
 }
 

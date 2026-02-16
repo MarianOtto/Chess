@@ -17,5 +17,5 @@ class Square{
         std::string notation() const;
     
     private:
-        Index _index;
+        const Index _index;
     };

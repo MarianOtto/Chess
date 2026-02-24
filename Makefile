@@ -1,7 +1,7 @@
 CXX = g++
 GCOV = gcov
 
-CXXFLAGS = -std=c++11 -Wall -Wextra -g
+CXXFLAGS = -std=c++14 -Wall -Wextra -g
 CXXFLAGS += -I include -I /usr/local/include
 COVERAGE += -fprofile-arcs -ftest-coverage
 
@@ -51,9 +51,6 @@ default: all
 $(TARGET): $(OBJ) 
 	@echo "Linking"
 	@$(CXX) $(CXXFLAGS) $(COVERAGE) -o $@ $(OBJ)
-	# Gets rid of files created by coverage
-	mv $(OBJ_PATH)/*.gcda $(MISC_PATH) 
-	mv $(OBJ_PATH)/*.gcno $(MISC_PATH)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp | dirs
 	@echo "Compiling $<"
@@ -94,6 +91,7 @@ test_bin: $(TEST) # Create bin only
 gcov: $(SRC) # Create coverage report
 	- gcov -r $(SRC) -o $(OBJ_PATH)
 	mv *.gcov $(GCOV_PATH)
+	- rm $(OBJ_PATH)/*.gcda
 
 
 ### BUILDERS ###

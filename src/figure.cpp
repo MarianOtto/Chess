@@ -1,15 +1,17 @@
 #include "../include/figure.h"
+#include "../include/board.h"
+#include <memory>
 
 //CONSTRUCTORS
-Figure::Figure(Color color, Square square, Type type)
-:_color(color), _square_index(square.index()), _type(type){
+Figure::Figure(Color color, Square::Index square_index, Type type, Board& board)
+:_color(color), _square_index(square_index), _type(type), _board(board){
     _has_moved = 0;
     //Assign opposite color
     switch (color) {
-        case Figure::Color::White:
+        case Color::White:
             _opposite_color = Color::Black;
             break;
-        case Figure::Color::Black:
+        case Color::Black:
             _opposite_color = Color::White;
             break;
         default: //Color is Any
@@ -18,23 +20,23 @@ Figure::Figure(Color color, Square square, Type type)
     }
 }
 
-Figure Figure::fromNotation(Color color, std::string notation){
-    Square square = Square::fromNotation(notation);
+std::unique_ptr<Figure> Figure::fromNotation(Color color, std::string notation, Board& board){
+    Square square = Square::fromNotation(notation, board);
     
-    return Figure(color, square, Type::None);
+    return std::make_unique<Figure>(color, square.index(), Type::None, board);
 }
 
 
 //GETTER
-Figure::Color Figure::get_color() const{
+Color Figure::get_color() const{
     return _color;
 }
 
-Square::Index Figure::get_square_index() const{
-    return _square_index;
+Square Figure::get_square() const{
+    return (_board.get_squares()->at(_square_index));
 }
 
-Figure::Type Figure::get_type() const{
+Type Figure::get_type() const{
     return _type;
 }
 
@@ -42,14 +44,14 @@ bool Figure::get_has_moved() const{
     return _has_moved;
 }
 
-Figure::Color Figure::get_opposite_color() const{
+Color Figure::get_opposite_color() const{
     return _opposite_color;
 }
 
 
 //SETTER
-void Figure::set_square_index(Square square){
-    _square_index = square.index();
+void Figure::set_square_index(Square::Index index){
+    _square_index = index;
 }
 void Figure::set_has_moved(bool has_moved){
     _has_moved = has_moved;

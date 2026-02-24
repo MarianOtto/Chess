@@ -1,36 +1,26 @@
 #pragma once
 #include "../include/square.h"
+#include "../include/color.h"
+#include "../include/type.h"
+#include <memory>
+
+class Board;
 
 class Figure{
     public:
-        enum class Color{
-            Black = 0,
-            White = 1,
-            Any = -1
-        };
-
-        enum class Type{
-            King = 1,
-            Queen,
-            Rook,
-            Bishop,
-            Knight,
-            Pawn,
-            None = -1
-        };
-
         Color get_color() const;
-        Square::Index get_square_index() const;
+        Square get_square() const;
         Type get_type() const;
         bool get_has_moved() const;
         Color get_opposite_color() const;
+        Board* get_board() const;
 
-        void set_square_index(Square square);
+        void set_square_index(Square::Index index);
         void set_has_moved(bool has_moved);
         void set_type(Type type);
 
-        Figure(Color color, Square square, Type type);
-        static Figure fromNotation(Color color, std::string notation);
+        Figure(Color color, Square::Index square_index, Type type, Board& board);
+        static std::unique_ptr<Figure> fromNotation(Color color, std::string notation, Board& board);
 
     private:
         Color _color;
@@ -38,5 +28,5 @@ class Figure{
         Type _type;
         bool _has_moved;
         Color _opposite_color;
-        
+        Board& _board;
 };

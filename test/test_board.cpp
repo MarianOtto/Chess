@@ -10,7 +10,7 @@ TEST_CASE("Create Board", "[board]"){
 
         WHEN("You check the index of a Square at that number"){
             THEN("The index should be the same as the number x "){
-                CHECK(board.get_squares()->at(x).index() == x);
+                CHECK(board.get_square_at(x)->index() == x);
             }
         }
     }
@@ -136,7 +136,7 @@ TEST_CASE("Move Figure", "[board] [move]"){
         //         CHECK(figure->get_square().notation() == "D3");
         //     }
         //     THEN("The Figure should belong to the D3 (Index 26) of the Board"){
-        //         CHECK(board.get_squares().at(26).get_figure() == figure.get());
+        //         CHECK(board.get_figure_at(26) == figure.get());
         //     }
         // }
     }

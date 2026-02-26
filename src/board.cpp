@@ -1,13 +1,14 @@
 #include "../include/board.h"
 #include "../include/figure.h"
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 //CONSTRUCTORS
 Board::Board(){
     for(int idx = 0; idx <= 63; idx++){
-        Square square(idx, *this);
-        _squares.push_back(square);
+        auto square = std::make_unique<Square>(idx, *this);
+        _squares.push_back(std::move(square));
     }
     _black_bitmap = 0;
     _white_bitmap = 0;
@@ -16,7 +17,7 @@ Board::Board(){
 
 
 //GETTERS
-std::vector<Square>* Board::get_squares(){
+std::vector<std::unique_ptr<Square>>* Board::get_squares(){
     return &_squares;
 }
 
@@ -27,11 +28,11 @@ std::vector<std::unique_ptr<Figure>>* Board::get_figures(){
 Figure* Board::get_figure_on(std::string notation){
     Square square = Square::fromNotation(notation, *this);
     Square::Index index = square.index();
-    return _squares.at(index).get_figure();
+    return _squares.at(index)->get_figure();
 }
 
 Figure* Board::get_figure_on(Square::Index index){
-    return _squares.at(index).get_figure();
+    return _squares.at(index)->get_figure();
 }
 
 Square* Board::get_square_at(std::string notation){
@@ -41,7 +42,7 @@ Square* Board::get_square_at(std::string notation){
 }
 
 Square* Board::get_square_at(Square::Index index){
-    return &_squares.at(index);
+    return _squares.at(index).get();
 }
 
 uint64_t Board::get_black_bitmap(){
@@ -79,8 +80,6 @@ void Board::addFigure(std::unique_ptr<Figure> figure){
 }
 
 void Board::addFigure(std::unique_ptr<Figure> figure, std::string notation){
-    //TODO: Get square on board via notation
-    Square square = Square::fromNotation(notation, *this);
     //figure->set_square(square);
     get_square_at(notation)->set_figure(figure.get());
     
@@ -90,6 +89,6 @@ void Board::addFigure(std::unique_ptr<Figure> figure, std::string notation){
 void Board::addFigure(std::unique_ptr<Figure> figure, Square* square){
     figure->set_square(square);
 
-    get_squares()->at(square->index()).set_figure(figure.get());
+    get_square_at(square->index())->set_figure(figure.get());
     addFigure(std::move(figure));
 }

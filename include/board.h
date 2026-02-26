@@ -15,7 +15,7 @@ class Board{
         uint64_t get_white_bitmap();
         uint64_t get_black_bitmap();
         uint64_t get_any_bitmap();
-        std::vector<Square>* get_squares();
+        std::vector<std::unique_ptr<Square>>* get_squares();
         std::vector<std::unique_ptr<Figure>>* get_figures();
         Figure* get_figure_on(std::string notation);
         Figure* get_figure_on(Square::Index index);
@@ -32,6 +32,6 @@ class Board{
         uint64_t _white_bitmap;
         uint64_t _black_bitmap;
         uint64_t _any_bitmap;
-        std::vector<Square> _squares;
+        std::vector<std::unique_ptr<Square>> _squares;
         std::vector<std::unique_ptr<Figure>> _figures;
 };

@@ -34,6 +34,16 @@ Figure* Board::get_figure_on(Square::Index index){
     return _squares.at(index).get_figure();
 }
 
+Square* Board::get_square_at(std::string notation){
+    Square square = Square::fromNotation(notation, *this);
+
+    return get_square_at(square.index());
+}
+
+Square* Board::get_square_at(Square::Index index){
+    return &_squares.at(index);
+}
+
 uint64_t Board::get_black_bitmap(){
     return _black_bitmap;
 }
@@ -52,15 +62,15 @@ void Board::addFigure(std::unique_ptr<Figure> figure){
     //Update bitmaps
     switch (figure->get_color()) {
         case Color::Any:
-            _any_bitmap ^= figure->get_square().bit();
+            _any_bitmap ^= figure->get_square()->bit();
             break;
         case Color::Black:
-            _black_bitmap ^= figure->get_square().bit();
-            _any_bitmap ^= figure->get_square().bit();
+            _black_bitmap ^= figure->get_square()->bit();
+            _any_bitmap ^= figure->get_square()->bit();
             break;
         case Color::White:
-            _white_bitmap ^= figure->get_square().bit();
-            _any_bitmap ^= figure->get_square().bit();
+            _white_bitmap ^= figure->get_square()->bit();
+            _any_bitmap ^= figure->get_square()->bit();
             break;
     }
 
@@ -69,16 +79,17 @@ void Board::addFigure(std::unique_ptr<Figure> figure){
 }
 
 void Board::addFigure(std::unique_ptr<Figure> figure, std::string notation){
+    //TODO: Get square on board via notation
     Square square = Square::fromNotation(notation, *this);
-    figure->set_square_index(square.index());
-    get_squares()->at(square.index()).set_figure(figure.get());
+    //figure->set_square(square);
+    get_square_at(notation)->set_figure(figure.get());
     
     addFigure(std::move(figure));
 }
 
-void Board::addFigure(std::unique_ptr<Figure> figure, Square::Index index){
-    figure->set_square_index(index);
+void Board::addFigure(std::unique_ptr<Figure> figure, Square* square){
+    figure->set_square(square);
 
-    get_squares()->at(index).set_figure(figure.get());
+    get_squares()->at(square->index()).set_figure(figure.get());
     addFigure(std::move(figure));
 }

@@ -3,8 +3,8 @@
 #include <memory>
 
 //CONSTRUCTORS
-Figure::Figure(Color color, Square::Index square_index, Type type, Board& board)
-:_color(color), _square_index(square_index), _type(type), _board(board){
+Figure::Figure(Color color, Square* square, Type type, Board& board)
+:_color(color), _square(square), _type(type), _board(board){
     _has_moved = 0;
     //Assign opposite color
     switch (color) {
@@ -18,12 +18,13 @@ Figure::Figure(Color color, Square::Index square_index, Type type, Board& board)
             _opposite_color = Color::Any;
             break;
     }
+    //Add to board
+    square->set_figure(this);
 }
 
 std::unique_ptr<Figure> Figure::fromNotation(Color color, std::string notation, Board& board){
-    Square square = Square::fromNotation(notation, board);
-    
-    return std::make_unique<Figure>(color, square.index(), Type::None, board);
+
+    return std::make_unique<Figure>(color, board.get_square_at(notation), Type::None, board);
 }
 
 
@@ -32,8 +33,8 @@ Color Figure::get_color() const{
     return _color;
 }
 
-Square Figure::get_square() const{
-    return (_board.get_squares()->at(_square_index));
+Square* Figure::get_square() const{
+    return _square;
 }
 
 Type Figure::get_type() const{
@@ -50,8 +51,8 @@ Color Figure::get_opposite_color() const{
 
 
 //SETTER
-void Figure::set_square_index(Square::Index index){
-    _square_index = index;
+void Figure::set_square(Square* square){
+    _square = square;
 }
 void Figure::set_has_moved(bool has_moved){
     _has_moved = has_moved;

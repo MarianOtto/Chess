@@ -50,6 +50,6 @@ Figure* Square::get_figure(){
 }
 
 void Square::set_figure(Figure* figure){
-    figure->set_square_index(this->index());
+    figure->set_square(this);
     _figure = figure;
 }

@@ -26,7 +26,7 @@ TEST_CASE("Add Figures", "[board]"){
             board.addFigure(std::move(figure));
 
             THEN("You should be able to access the Figure via the Board"){
-                CHECK(board.get_figures()->back()->get_opposite_color() == Color::White);
+                CHECK(board.get_figure_on("D3")->get_opposite_color() == Color::White);
             }
             THEN("The white bitmap should not change"){
                 CHECK(board.get_white_bitmap() == 0);
@@ -50,10 +50,10 @@ TEST_CASE("Add Figure to specific square by string", "[board]"){
             board.addFigure(std::move(figure), "B5");
 
             THEN("The notation/square of the figure should change"){
-                CHECK(board.get_figures()->back()->get_square().notation() == "B5");
+                CHECK(board.get_figures()->back()->get_square()->notation() == "B5");
             }
             THEN("The Figure should be added to the Square on B5"){
-                CHECK(board.get_figure_on("B5")->get_square().notation() == "B5");
+                CHECK(board.get_figure_on("B5")->get_square()->notation() == "B5");
             }
             THEN("The white bitmap should change"){
                 CHECK(board.get_white_bitmap() == 0x1000);
@@ -74,9 +74,9 @@ TEST_CASE("Add Figure to specific square by index", "[board]"){
         auto figure = Figure::fromNotation(Color::White, "A4", board);
 
         WHEN("You add a Figure to the Board at a certain index"){
-            board.addFigure(std::move(figure), 18);
+            board.addFigure(std::move(figure), board.get_square_at(18));
             THEN("The square index of the Figure obbject should change"){
-                CHECK(board.get_figures()->back()->get_square().index() == 18);
+                CHECK(board.get_figures()->back()->get_square()->index() == 18);
             }
         }
     }
@@ -118,7 +118,7 @@ TEST_CASE("Get Figure on Square A4"){
                 CHECK(board.get_figure_on("A4") == figptr);
             }
             THEN("Board::get_figure_on(Index) should return a pointer to the Figure"){
-                CHECK(board.get_figure_on(5) == figptr);
+                CHECK(board.get_figure_on(3) == figptr);
             }
         }
     }

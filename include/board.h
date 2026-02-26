@@ -19,13 +19,14 @@ class Board{
         std::vector<std::unique_ptr<Figure>>* get_figures();
         Figure* get_figure_on(std::string notation);
         Figure* get_figure_on(Square::Index index);
-
+        Square* get_square_at(std::string notation);
+        Square* get_square_at(Square::Index index);
 
         Board();
 
         void addFigure(std::unique_ptr<Figure> figure);
-        void addFigure(std::unique_ptr<Figure> figure, std::string notation);
-        void addFigure(std::unique_ptr<Figure> figure, Square::Index index);
+        void addFigure(std::unique_ptr<Figure> figure, std::string notation); 
+        void addFigure(std::unique_ptr<Figure> figure, Square* square);
 
     private:
         uint64_t _white_bitmap;

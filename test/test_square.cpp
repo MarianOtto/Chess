@@ -91,13 +91,13 @@ TEST_CASE("Add Figure on Square", "[square]"){
 
         WHEN("You add the Figure to the Square and to the Board"){
             square.set_figure(figptr);
-            board.addFigure(std::move(figure), square.index());
+            board.addFigure(std::move(figure), &square);
             
             THEN("The Figure should be accessible by the Square"){
                 CHECK(square.get_figure() == figptr);
             }
             THEN("The Figure square index should change to the Square"){
-                CHECK(figptr->get_square().index() == square.index());
+                CHECK(figptr->get_square()->index() == square.index());
             }
             THEN("The change should also show in the Board Square"){
                 CHECK(board.get_figure_on(square.index()) == figptr);

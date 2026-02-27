@@ -7,14 +7,14 @@
 TEST_CASE("Create Square", "[square]"){
     Board board;
     SECTION("Square at 0"){
-        Square square(0, board); //Create square with idx 35
+        Square square(0, board);
 
         CHECK(square.index() == 0);
         CHECK(square.bit() == 0b1);
         CHECK(square.notation() == "A1");
     }
     SECTION("Square at 63"){
-        Square square(63, board); //Create square with idx 35
+        Square square(63, board);
 
         CHECK(square.index() == 63);
         CHECK(square.bit() == 0x8000000000000000);
@@ -81,26 +81,22 @@ TEST_CASE("Create Square from notation", "[square]"){
     }
 }
 
-TEST_CASE("Add Figure on Square", "[square]"){
+TEST_CASE("set_figure: Add Figure on Square", "[square]"){
     GIVEN("A Square on A3 and a Figure on A4"){
         Board board;
         Square square = Square::fromNotation("A3", board);
-        auto figure = Figure::fromNotation(Color::Black, "A4", board);
+        auto figure = Figure::fromNotation(Color::Black, "A4", board); //Create square with idx 35
         auto figptr = figure.get();
         
 
-        WHEN("You add the Figure to the Square and to the Board"){
+        WHEN("You add the Figure to the Square"){
             square.set_figure(figptr);
-            board.addFigure(std::move(figure), &square);
             
             THEN("The Figure should be accessible by the Square"){
                 CHECK(square.get_figure() == figptr);
             }
-            THEN("The Figure square index should change to the Square"){
-                CHECK(figptr->get_square()->index() == square.index());
-            }
-            THEN("The change should also show in the Board Square"){
-                CHECK(board.get_figure_on(square.index()) == figptr);
+            THEN("The Figure square should change to the Square"){
+                CHECK(figptr->get_square() == &square);
             }
         }
     }

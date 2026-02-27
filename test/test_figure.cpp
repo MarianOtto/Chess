@@ -7,67 +7,59 @@ TEST_CASE("Create Figure", "[figure]"){
         Board board;
         Figure figure(Color::White, board.get_square_at(8), Type::None, board);
 
-        THEN("The color should be set to White"){
+        THEN("All the members should be set"){
             CHECK(figure.get_color() == Color::White);
-        }
-        THEN("The square should be on a board at the same position"){
             CHECK(figure.get_square() == board.get_square_at(8));
-        }
-        THEN("has_moved should be zero"){
             CHECK(figure.get_has_moved() == 0);
-        }
-        THEN("The opposite color should be black"){
             CHECK(figure.get_opposite_color() == Color::Black);
-        }
-        THEN("The type should be set"){
             CHECK(figure.get_type() == Type::None);
         }
     }
 }
 
-TEST_CASE("Color should match opposite color"){
-    WHEN("You construct a black Figure"){
+TEST_CASE("Color should match opposite color", "[figure]"){
+    GIVEN("An empty Board"){
         Board board;
-        Figure figure(Color::Black, board.get_square_at("H3"), Type::None, board);
 
-        THEN("The color should be Black"){
-            CHECK(figure.get_color() == Color::Black);
-        }
-        THEN("The opposite color should be white"){
-            CHECK(figure.get_opposite_color() == Color::White);
-        }
-    }
-    WHEN("You construct a Figure with color any"){
-        Board board;
-        Figure figure(Color::Any, board.get_square_at("H3"), Type::None, board);
+        WHEN("You construct a black Figure"){
+            Figure figure(Color::Black, board.get_square_at("H3"), Type::None, board);
 
-        THEN("The color should be Any"){
-            CHECK(figure.get_color() == Color::Any);
+            THEN("The colors should be opposite"){
+                CHECK(figure.get_color() == Color::Black);
+                CHECK(figure.get_opposite_color() == Color::White);
+            }
         }
-        THEN("The opposite color should be Any"){
-            CHECK(figure.get_color() == Color::Any);
-        }
-    }
-}
 
-TEST_CASE("Create Figure from Notation", "[figure]"){
-    WHEN("You create a Figure from Notation"){
-        Board board;
-        auto figure = Figure::fromNotation(Color::Black, "B1", board);
+        WHEN("You construct a Figure with color Any"){
+            Figure figure(Color::Any, board.get_square_at("H3"), Type::None, board);
 
-        THEN("The square of the figure should be add to the square"){
-            CHECK(figure->get_square() == board.get_square_at("B1"));
+            THEN("The colors should be Any"){
+                CHECK(figure.get_color() == Color::Any);
+                CHECK(figure.get_color() == Color::Any);
+            }
         }
     }
 }
 
-TEST_CASE("Create Figure from Notation with Type", "[figure]"){
-    WHEN("You create a Figure from Notation and specify the type"){
+TEST_CASE("fromNotation: Overloads behave consistantly", "[figure]"){
+    GIVEN("An empty Board"){
         Board board;
-        auto figure = Figure::fromNotation(Color::Black, "C6", Type::Knight, board);
-        
-        THEN("The type should be set to the given type")
-            CHECK(figure->get_type() == Type::Knight);
+
+        WHEN("You create a Figure from Notation"){
+            auto figure = Figure::fromNotation(Color::Black, "B1", board);
+
+            THEN("The square of the figure should be add to the square"){
+                CHECK(figure->get_square() == board.get_square_at("B1"));
+            }
+        }
+    
+        WHEN("You create a Figure from Notation and specify the type"){
+            auto figure = Figure::fromNotation(Color::Black, "C6", Type::Knight, board);
+            
+            THEN("The type should be set to the given type"){
+                CHECK(figure->get_type() == Type::Knight);
+            }
+        }
     }
 }
 
@@ -80,24 +72,14 @@ TEST_CASE("Test setters", "[figure]"){
         REQUIRE(figure->get_has_moved() == 0);
         REQUIRE(figure->get_type() == Type::None);
 
-        WHEN("You set the square"){
+        WHEN("You set different members"){
             figure->set_square(board.get_square_at(31));
-
-            THEN("The index should change"){
-                CHECK(figure->get_square() == board.get_square_at(31));
-            }
-        }
-        WHEN("You set has_moved"){
             figure->set_has_moved(1);
-
-            THEN("has_moved should change"){
-                CHECK(figure->get_has_moved() == 1);
-            }
-        }
-        WHEN("You set the type to king"){
             figure->set_type(Type::King);
 
-            THEN("The type should be king"){
+            THEN("The all the members should change"){
+                CHECK(figure->get_square() == board.get_square_at(31));
+                CHECK(figure->get_has_moved() == 1);
                 CHECK(figure->get_type() == Type::King);
             }
         }

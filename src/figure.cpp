@@ -27,6 +27,10 @@ std::unique_ptr<Figure> Figure::fromNotation(Color color, std::string notation, 
     return std::make_unique<Figure>(color, board.get_square_at(notation), Type::None, board);
 }
 
+std::unique_ptr<Figure> Figure::fromNotation(Color color, std::string notation, Type type, Board& board){
+
+    return std::make_unique<Figure>(color, board.get_square_at(notation), type, board);
+}
 
 //GETTER
 Color Figure::get_color() const{

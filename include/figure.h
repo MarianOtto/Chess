@@ -21,7 +21,7 @@ class Figure{
 
         Figure(Color color, Square* square, Type type, Board& board);
         static std::unique_ptr<Figure> fromNotation(Color color, std::string notation, Board& board);
-
+        static std::unique_ptr<Figure> fromNotation(Color color, std::string notation, Type type, Board& board);
     private:
         Color _color;
         Square* _square;

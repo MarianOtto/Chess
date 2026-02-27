@@ -77,7 +77,6 @@ void Board::addFigure(std::unique_ptr<Figure> figure){
 }
 
 void Board::addFigure(std::unique_ptr<Figure> figure, std::string notation){
-    //figure->set_square(square);
     get_square_at(notation)->set_figure(figure.get());
     
     addFigure(std::move(figure));

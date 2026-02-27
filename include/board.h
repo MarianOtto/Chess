@@ -31,7 +31,6 @@ class Board{
     private:
         uint64_t _white_bitmap;
         uint64_t _black_bitmap;
-        uint64_t _any_bitmap;
         std::vector<std::unique_ptr<Square>> _squares;
         std::vector<std::unique_ptr<Figure>> _figures;
 };

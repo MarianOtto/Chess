@@ -12,7 +12,6 @@ Board::Board(){
     }
     _black_bitmap = 0;
     _white_bitmap = 0;
-    _any_bitmap = 0;
 }
 
 
@@ -54,7 +53,7 @@ uint64_t Board::get_white_bitmap(){
 }
 
 uint64_t Board::get_any_bitmap(){
-    return _any_bitmap;
+    return _white_bitmap | _black_bitmap;
 }
 
 
@@ -63,15 +62,13 @@ void Board::addFigure(std::unique_ptr<Figure> figure){
     //Update bitmaps
     switch (figure->get_color()) {
         case Color::Any:
-            _any_bitmap ^= figure->get_square()->bit();
+            _black_bitmap ^= figure->get_square()->bit();
             break;
         case Color::Black:
             _black_bitmap ^= figure->get_square()->bit();
-            _any_bitmap ^= figure->get_square()->bit();
             break;
         case Color::White:
             _white_bitmap ^= figure->get_square()->bit();
-            _any_bitmap ^= figure->get_square()->bit();
             break;
     }
 

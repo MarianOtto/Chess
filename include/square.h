@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include "../include/color.h"
 
 class Figure;
 class Board;
@@ -23,6 +24,9 @@ class Square{
         Figure* get_figure();
 
         void set_figure(Figure* figure);
+
+        bool occupied_by(Color color);
+        bool has_figure();
     
     private:
         const Index _index;

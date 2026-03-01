@@ -1,5 +1,6 @@
 #include "../include/square.h"
 #include "../include/figure.h"
+#include "../include/board.h"
 #include <stdexcept>
 
 Square::Square(Index idx, Board& board)
@@ -12,7 +13,7 @@ Square::Square(Index idx, Board& board)
 
 Square Square::fromNotation(std::string notation, Board& board){
     if(notation.size() != 2){
-        std::length_error("Invalid notation size");
+        throw std::length_error("Invalid notation size");
     }
 
     char file = notation[0];
@@ -52,4 +53,30 @@ Figure* Square::get_figure(){
 void Square::set_figure(Figure* figure){
     figure->set_square(this);
     _figure = figure;
+}
+
+bool Square::occupied_by(Color color){
+    //Get corrosponding bitmaps
+    uint64_t bitmap;
+    switch (color) {
+        case Color::Black:
+            bitmap = _board.get_black_bitmap();
+            break;
+        case Color::White:
+            bitmap = _board.get_white_bitmap();
+            break;
+        case Color::Any:
+            bitmap = _board.get_any_bitmap();
+            break;
+    }
+
+    if (has_figure() == 0) {
+        return 0;
+    } else {
+        return bit() & bitmap;
+    }
+}
+
+bool Square::has_figure(){
+    return _figure == nullptr ? 0 : 1;
 }

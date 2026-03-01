@@ -53,7 +53,7 @@ uint64_t Board::get_white_bitmap(){
 }
 
 uint64_t Board::get_any_bitmap(){
-    return _white_bitmap ^ _black_bitmap;
+    return _white_bitmap | _black_bitmap;
 }
 
 

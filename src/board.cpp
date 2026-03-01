@@ -81,3 +81,13 @@ void Board::addFigure(std::unique_ptr<Figure> figure, Square* square){
     get_square_at(square->index())->set_figure(figure.get());
     addFigure(std::move(figure));
 }
+
+bool Board::occupied_by(Color color, std::string notation){
+    Square* square = get_square_at(notation);
+    return square->occupied_by(color);
+}
+
+bool Board::occupied_by(Color color, Square::Index index){
+    Square* square = get_square_at(index);
+    return square->occupied_by(color);
+}

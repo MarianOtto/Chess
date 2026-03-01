@@ -88,6 +88,51 @@ TEST_CASE("Board accessors return consistent Figure pointer", "[board]"){
     }
 }
 
+TEST_CASE("occupied_by: Overload varients should behave consistently", "[board][occupied_by]"){
+    GIVEN("A board with two figures on it"){
+        Board board;
+        auto whiteFigure = Figure::fromNotation(Color::White, "B3", board);
+        auto blackFigure = Figure::fromNotation(Color::Black, "G4", board);
+
+        board.addFigure(std::move(whiteFigure));
+        board.addFigure(std::move(blackFigure));
+
+        WHEN("You check for all combinations"){
+            
+            
+            THEN("Occupied_by(string) should give the same results as the Square::occupied_by"){
+                //Empty Square
+                CHECK(board.occupied_by(Color::Black, "A1") == 0);
+                CHECK(board.occupied_by(Color::White, "A1") == 0);
+                CHECK(board.occupied_by(Color::Any, "A1") == 0);
+                //White Square
+                CHECK(board.occupied_by(Color::Black, "B3") == 0);
+                CHECK(board.occupied_by(Color::White, "B3") == 1);
+                CHECK(board.occupied_by(Color::Any, "B3") == 1);
+                //Black Square
+                CHECK(board.occupied_by(Color::Black, "G4") == 1);
+                CHECK(board.occupied_by(Color::White, "G4") == 0);
+                CHECK(board.occupied_by(Color::Any, "G4") == 1);
+            }
+
+            THEN("Occupied_by(string) should give the same results as the Square::occupied_by"){
+                //Empty Square
+                CHECK(board.occupied_by(Color::Black, 0) == 0);
+                CHECK(board.occupied_by(Color::White, 0) == 0);
+                CHECK(board.occupied_by(Color::Any, 0) == 0);
+                //White Square
+                CHECK(board.occupied_by(Color::Black, 10) == 0);
+                CHECK(board.occupied_by(Color::White, 10) == 1);
+                CHECK(board.occupied_by(Color::Any, 10) == 1);
+                //Black Square
+                CHECK(board.occupied_by(Color::Black, 51) == 1);
+                CHECK(board.occupied_by(Color::White, 51) == 0);
+                CHECK(board.occupied_by(Color::Any, 51) == 1);
+            }
+        }
+    }
+}
+
 TEST_CASE("Move Figure", "[board] [move]"){
     GIVEN("A Figure on A3"){
         Board board;

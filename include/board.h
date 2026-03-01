@@ -28,6 +28,9 @@ class Board{
         void addFigure(std::unique_ptr<Figure> figure, std::string notation); 
         void addFigure(std::unique_ptr<Figure> figure, Square* square);
 
+        bool occupied_by(Color color, std::string notation);
+        bool occupied_by(Color color, Square::Index index);
+
     private:
         uint64_t _white_bitmap;
         uint64_t _black_bitmap;

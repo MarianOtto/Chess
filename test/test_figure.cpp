@@ -3,18 +3,28 @@
 #include "../include/board.h"
 
 TEST_CASE("Create Figure", "[figure]"){
-    WHEN("You construct a white Figure on Square 8"){
+    GIVEN("An empty board"){
         Board board;
-        Figure figure(Color::White, board.get_square_at(8), Type::None, board);
 
-        THEN("All the members should be set"){
-            CHECK(figure.get_color() == Color::White);
-            CHECK(figure.get_square() == board.get_square_at(8));
-            CHECK(figure.get_has_moved() == 0);
-            CHECK(figure.get_opposite_color() == Color::Black);
-            CHECK(figure.get_type() == Type::None);
+        WHEN("You construct a white Figure on Square 8"){
+            Figure figure(Color::White, board.get_square_at(8), Type::None, board);
+
+            THEN("All the members should be set"){
+                CHECK(figure.get_color() == Color::White);
+                CHECK(figure.get_square() == board.get_square_at(8));
+                CHECK(figure.get_has_moved() == 0);
+                CHECK(figure.get_opposite_color() == Color::Black);
+                CHECK(figure.get_type() == Type::None);
+            }
+        }
+
+        WHEN("You construct a Figure with an invalid color"){
+            THEN("An exception should be thrown"){
+                CHECK_THROWS(Figure(Color::Any, board.get_square_at(8), Type::None, board));
+            }
         }
     }
+
 }
 
 TEST_CASE("Color should match opposite color", "[figure]"){
@@ -30,12 +40,12 @@ TEST_CASE("Color should match opposite color", "[figure]"){
             }
         }
 
-        WHEN("You construct a Figure with color Any"){
-            Figure figure(Color::Any, board.get_square_at("H3"), Type::None, board);
+        WHEN("You construct a white Figure"){
+            Figure figure(Color::White, board.get_square_at("H3"), Type::None, board);
 
-            THEN("The colors should be Any"){
-                CHECK(figure.get_color() == Color::Any);
-                CHECK(figure.get_color() == Color::Any);
+            THEN("The colors should be opposite"){
+                CHECK(figure.get_color() == Color::White);
+                CHECK(figure.get_opposite_color() == Color::Black);
             }
         }
     }

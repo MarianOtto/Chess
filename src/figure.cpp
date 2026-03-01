@@ -1,6 +1,7 @@
 #include "../include/figure.h"
 #include "../include/board.h"
 #include <memory>
+#include <stdexcept>
 
 //CONSTRUCTORS
 Figure::Figure(Color color, Square* square, Type type, Board& board)
@@ -14,8 +15,8 @@ Figure::Figure(Color color, Square* square, Type type, Board& board)
         case Color::Black:
             _opposite_color = Color::White;
             break;
-        default: //Color is Any
-            _opposite_color = Color::Any;
+        case Color::Any: //Color is Any
+            throw std::invalid_argument("Color needs to be Black or White");
             break;
     }
     //Add to board

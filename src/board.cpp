@@ -53,25 +53,18 @@ uint64_t Board::get_white_bitmap(){
 }
 
 uint64_t Board::get_any_bitmap(){
-    return _white_bitmap | _black_bitmap;
+    return _white_bitmap ^ _black_bitmap;
 }
 
 
 //ADD FIGURE
 void Board::addFigure(std::unique_ptr<Figure> figure){
     //Update bitmaps
-    switch (figure->get_color()) {
-        case Color::Any:
-            _black_bitmap ^= figure->get_square()->bit();
-            break;
-        case Color::Black:
-            _black_bitmap ^= figure->get_square()->bit();
-            break;
-        case Color::White:
-            _white_bitmap ^= figure->get_square()->bit();
-            break;
+    if (figure->get_color() == Color::Black) {
+        _black_bitmap ^= figure->get_square()->bit();
+    } else {
+        _white_bitmap ^= figure->get_square()->bit();
     }
-
     
     _figures.push_back(std::move(figure));
 }

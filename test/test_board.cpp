@@ -54,7 +54,7 @@ TEST_CASE("addFigure: Overloads apply the correct target square", "[board][addFi
 TEST_CASE("addFigure: Add multiple Figures", "[board][addFigure]"){
     GIVEN("A black and a white Figure"){
         Board board;
-        auto figureA = Figure::fromNotation(Color::Any, "A8", board);
+        auto figureA = Figure::fromNotation(Color::Black, "A8", board);
         auto figureB = Figure::fromNotation(Color::White, "B3", board);
 
         WHEN("You add both Figures to the Board"){
@@ -79,7 +79,7 @@ TEST_CASE("Board accessors return consistent Figure pointer", "[board]"){
         WHEN("You add the Figure to the Board"){
             board.addFigure(std::move(figure));
 
-            THEN("all accessors return the same pointer"){
+            THEN("All accessors return the same pointer"){
                 CHECK(board.get_figure_on("A4") == figptr);
                 CHECK(board.get_figure_on(3) == figptr);
                 CHECK(board.get_squares()->at(3)->get_figure() == figptr);

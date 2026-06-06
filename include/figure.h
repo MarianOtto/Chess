@@ -10,12 +10,24 @@ class Board;
 class Figure
 {
 public:
+  // Constructors
   Figure(Color color, Square* square, Type type, Board& board);
+
+  /**
+   * @brief Factory to construct Figures
+   *
+   * @param color
+   * @param notation
+   * @param type
+   * @param board
+   * @return std::unique_ptr<Figure>
+   */
   static std::unique_ptr<Figure> fromNotation(Color color,
                                               std::string notation,
                                               Type type,
                                               Board& board);
 
+  // Getters
   Color get_color() const;
   Square* get_square() const;
   Type get_type() const;
@@ -23,11 +35,16 @@ public:
   Color get_opposite_color() const;
   Board* get_board() const;
 
+  // Setters
   void set_square(Square* square);
   void set_has_moved(bool has_moved);
   void set_type(Type type);
 
-  virtual void move() = 0;
+  /**
+   * @brief Pure Virtual Method to get possible moves
+   *
+   * @return std::vector<Square*>
+   */
   virtual std::vector<Square*> get_possible_moves() = 0;
 
 protected:

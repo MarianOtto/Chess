@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+<<<<<<< HEAD
 //CONSTRUCTORS
 Board::Board(){
     for(int idx = 0; idx <= 63; idx++){
@@ -12,6 +13,18 @@ Board::Board(){
     }
     _black_bitmap = 0;
     _white_bitmap = 0;
+=======
+// CONSTRUCTORS
+Board::Board()
+{
+  // Add 64 Squares to the object
+  for (int idx = 0; idx <= 63; idx++) {
+    auto square = std::make_unique<Square>(idx, *this);
+    _squares.push_back(std::move(square));
+  }
+  _black_bitmap = 0;
+  _white_bitmap = 0;
+>>>>>>> 947b76b (Add Documentation)
 }
 
 

@@ -9,8 +9,3 @@ std::vector<Square*> Knight::get_possible_moves()
 {
   // TODO
 }
-
-void Knight::move()
-{
-  // TODO
-}

@@ -10,8 +10,3 @@ std::vector<Square*> King::get_possible_moves()
 {
   // TODO
 }
-
-void King::move()
-{
-  // TODO
-}

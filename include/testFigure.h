@@ -13,8 +13,4 @@ public:
                                               Board& board);
 
   std::vector<Square*> get_possible_moves() override;
-  void move() override
-  {
-    // Empty implementation for testing purposes
-  }
 };

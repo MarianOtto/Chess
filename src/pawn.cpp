@@ -19,8 +19,3 @@ std::vector<Square*> Pawn::get_possible_moves()
     // Implement logic for black pawn moves
   }
 }
-
-void Pawn::move()
-{
-  // TODO
-}

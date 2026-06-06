@@ -9,8 +9,3 @@ std::vector<Square*> Queen::get_possible_moves()
 {
   // TODO
 }
-
-void Queen::move()
-{
-  // TODO
-}

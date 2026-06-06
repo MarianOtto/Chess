@@ -9,8 +9,3 @@ std::vector<Square*> Rook::get_possible_moves()
 {
   // TODO
 }
-
-void Rook::move()
-{
-  // TODO
-}

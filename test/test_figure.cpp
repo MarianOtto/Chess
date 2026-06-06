@@ -133,34 +133,3 @@ TEST_CASE("Test setters", "[figure]")
     }
   }
 }
-
-// TEST_CASE("Move Figure", "[figure]"){
-//     Figure figure = Figure::fromNotation(Color::White, "B6");
-//     Figure figureBlack = Figure::fromNotation(Color::Black, "D1");
-//     Figure figureWhite = Figure::fromNotation(Color::White, "A2");
-
-//     SECTION("Move to a free Square"){
-//         figure.move("A3");
-
-//         CHECK(figure.get_has_moved() == 1);
-//         CHECK(figure.get_square()->index() == 2);
-//     }
-
-//     SECTION("Move to occupied Square"){
-//         CHECK_THROWS(figure.move("D1")); //Black Piece
-//         CHECK_THROWS(figure.move("A2")); //White Piece
-//     }
-
-//     SECTION("Move out of board"){
-//         CHECK_THROWS(figure.move("A9"));
-//     }
-
-//     /*
-//     TODO: Check for swap
-//     i.e. if figure moves to empty square or captures
-//     piece the old square should be empty now
-//     */
-
-// }
-// TODO: move
-// TODO: get squares

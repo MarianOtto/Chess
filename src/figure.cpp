@@ -33,34 +33,7 @@ Figure::Figure(Color color, Square* square, Type type, Board& board)
   square->set_figure(this);
 }
 
-std::unique_ptr<Figure> Figure::fromNotation(Color color,
-                                             std::string notation,
-                                             Type type,
-                                             Board& board)
-{
-  switch (type) {
-    case Type::Pawn:
-      return std::make_unique<Pawn>(
-        color, board.get_square_at(notation), board);
-    case Type::Knight:
-      return std::make_unique<Knight>(
-        color, board.get_square_at(notation), board);
-    case Type::Bishop:
-      return std::make_unique<Bishop>(
-        color, board.get_square_at(notation), board);
-    case Type::Rook:
-      return std::make_unique<Rook>(
-        color, board.get_square_at(notation), board);
-    case Type::Queen:
-      return std::make_unique<Queen>(
-        color, board.get_square_at(notation), board);
-    case Type::King:
-      return std::make_unique<King>(
-        color, board.get_square_at(notation), board);
-    default:
-      throw std::invalid_argument("Type needs to be a valid chess piece");
-  }
-}
+Figure* Figure::fromNotation(Color color, std::string notation, Board& board) {}
 
 // GETTER
 Color Figure::get_color() const

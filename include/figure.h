@@ -3,7 +3,6 @@
 #include "../include/square.h"
 #include "../include/type.h"
 #include <memory>
-#include <vector>
 
 class Board;
 
@@ -22,10 +21,7 @@ public:
    * @param board
    * @return std::unique_ptr<Figure>
    */
-  static std::unique_ptr<Figure> fromNotation(Color color,
-                                              std::string notation,
-                                              Type type,
-                                              Board& board);
+  static Figure* fromNotation(Color color, std::string notation, Board& board);
 
   // Getters
   Color get_color() const;
@@ -43,9 +39,9 @@ public:
   /**
    * @brief Pure Virtual Method to get possible moves
    *
-   * @return std::vector<Square*>
+   * @return uint64_t
    */
-  virtual std::vector<Square*> get_possible_moves() = 0;
+  virtual uint64_t get_possible_moves() = 0;
 
 protected:
   Color _color;

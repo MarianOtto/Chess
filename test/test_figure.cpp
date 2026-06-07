@@ -66,45 +66,6 @@ TEST_CASE("fromNotation: Overloads behave consistantly", "[figure]")
       CHECK(figure->get_square() == board.get_square_at("B1"));
     }
   }
-
-  WHEN("You create a Figure from Notation and specify the type")
-  {
-    auto figure = Figure::fromNotation(Color::Black, "C6", Type::Knight, board);
-
-    THEN("The type should be set to the given type")
-    {
-      CHECK(figure->get_type() == Type::Knight);
-    }
-  }
-}
-
-TEST_CASE("fromNotation: Create different Classes from Types", "[figure]")
-{
-  GIVEN("An empty Board")
-  {
-    Board board;
-    WHEN("You create Figures of different types")
-    {
-      auto pawn = Figure::fromNotation(Color::White, "D2", Type::Pawn, board);
-      auto rook = Figure::fromNotation(Color::White, "A1", Type::Rook, board);
-      auto knight =
-        Figure::fromNotation(Color::White, "B1", Type::Knight, board);
-      auto bishop =
-        Figure::fromNotation(Color::White, "C1", Type::Bishop, board);
-      auto queen = Figure::fromNotation(Color::White, "D1", Type::Queen, board);
-      auto king = Figure::fromNotation(Color::White, "E1", Type::King, board);
-
-      THEN("The correct derived classes should be instantiated")
-      {
-        CHECK(dynamic_cast<Pawn*>(pawn.get()) != nullptr);
-        CHECK(dynamic_cast<Rook*>(rook.get()) != nullptr);
-        CHECK(dynamic_cast<Knight*>(knight.get()) != nullptr);
-        CHECK(dynamic_cast<Bishop*>(bishop.get()) != nullptr);
-        CHECK(dynamic_cast<Queen*>(queen.get()) != nullptr);
-        CHECK(dynamic_cast<King*>(king.get()) != nullptr);
-      }
-    }
-  }
 }
 
 TEST_CASE("Test setters", "[figure]")

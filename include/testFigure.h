@@ -12,5 +12,5 @@ public:
                                               std::string notation,
                                               Board& board);
 
-  std::vector<Square*> get_possible_moves() override;
+  uint64_t get_possible_moves() override { return {}; }
 };

@@ -1,17 +1,25 @@
 #include "../include/bishop.h"
+#include "../include/board.h"
+#include <cstdint>
+#include <cstdio>
+#include <sys/types.h>
 
-Bishop::Bishop(Color color, Square *square, Board &board)
-    : Figure(color, square, Type::Bishop, board) {}
-
-<<<<<<< HEAD
-std::vector<Square *> Bishop::get_possible_moves() {
-  // TODO
+Bishop::Bishop(Color color, Square* square, Board& board)
+  : Figure(color, square, Type::Bishop, board)
+{
 }
 
-void Bishop::move() {
-=======
-std::vector<Square*> Bishop::get_possible_moves()
+Figure* Bishop::fromNotation(Color color, std::string notation, Board& board)
 {
->>>>>>> 68f0376 (Remove move method)
+  std::unique_ptr<Figure> figure;
+  figure =
+    std::make_unique<Bishop>(color, board.get_square_at(notation), board);
+  board.get_square_at(notation)->set_figure(figure.get());
+  board.addFigure(std::move(figure));
+  return board.get_figure_on(notation);
+}
+
+uint64_t Bishop::get_possible_moves()
+{
   // TODO
 }

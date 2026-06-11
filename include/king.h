@@ -1,12 +1,14 @@
-#include "../include/figure.h"
-#include <vector>
+#pragma once
 
-class King : public Figure
+#include "piece.h"
+#include <cstdint>
+
+class King : public Piece
 {
 public:
-  King(Color color, Square* square, Board& board);
-
-  static Figure* fromNotation(Color color, std::string notation, Board& board);
-
-  uint64_t get_possible_moves() override;
+  uint64_t static get_possible_moves(uint64_t pos,
+                                     bool is_white,
+                                     uint64_t friendly_squares,
+                                     uint64_t enemy_squares,
+                                     uint64_t free_squares);
 };

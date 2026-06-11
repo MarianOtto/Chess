@@ -1,11 +1,14 @@
-#include "../include/figure.h"
+#pragma once
 
-class Bishop : public Figure
+#include "piece.h"
+#include <cstdint>
+
+class Bishop : public Piece
 {
 public:
-  Bishop(Color color, Square* square, Board& board);
-
-  static Figure* fromNotation(Color color, std::string notation, Board& board);
-
-  uint64_t get_possible_moves() override;
+  uint64_t static get_possible_moves(uint64_t pos,
+                                     bool is_white,
+                                     uint64_t friendly_squares,
+                                     uint64_t enemy_squares,
+                                     uint64_t free_squares);
 };

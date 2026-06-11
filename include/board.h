@@ -1,18 +1,15 @@
 #pragma once
 
 #include "../include/color.h"
-#include "../include/square.h"
 #include "../include/type.h"
-#include <array>
 #include <cstdint>
-#include <memory>
+#include <string>
 #include <vector>
-
-class Figure;
-
 class Board
 {
 public:
+  using Index = uint8_t;
+  using Bitmap = uint64_t; // Maybe use
   /**
    * @brief Construct a new Board object
    *
@@ -27,40 +24,33 @@ public:
   uint64_t get_white_bitmap();
   uint64_t get_black_bitmap();
   uint64_t get_any_bitmap();
+  uint64_t get_has_not_moved();
 
-  std::vector<std::unique_ptr<Square>>* get_squares();
-  std::vector<std::unique_ptr<Figure>>* get_figures();
+  std::vector<char> get_figures();
 
-  Figure* get_figure_on(std::string notation);
-  Figure* get_figure_on(Square::Index index);
+  // Helper Functions
+  bool is_white(Index index);
+  Index notation2index(std::string notation);
 
-  Square* get_square_at(std::string notation);
-  Square* get_square_at(Square::Index index);
+  char get_figure_on(std::string notation);
+  char get_figure_on(Index index);
 
   /**
    * @brief Add figure to _figures
    *
-   * Add the figure to the board using its own square
-   * Alternatively specify new square
+   * Add the figure to the board
    *
    * @param figure
    */
-  void addFigure(std::unique_ptr<Figure> figure);
-  void addFigure(std::unique_ptr<Figure> figure, std::string notation);
-  void addFigure(std::unique_ptr<Figure> figure, Square* square);
+  void addFigure(Color color, Type type, std::string notation);
+  void addFigure(Color color, Type type, uint64_t bitmap);
 
-  /**
-   * @brief Check if Square is occupied by figure that color
-   *
-   * @param color (Black, White, Any)
-   * @return true if occupied; else false
-   */
-  bool occupied_by(Color color, std::string notation);
-  bool occupied_by(Color color, Square::Index index);
+  uint64_t get_possible_moves(Index index);
+  uint64_t get_possible_moves(std::string notation);
 
 private:
   uint64_t _white_bitmap;
   uint64_t _black_bitmap;
-  std::vector<std::unique_ptr<Square>> _squares;
-  std::vector<std::unique_ptr<Figure>> _figures;
+  uint64_t _has_not_moved;
+  std::vector<char> _figures;
 };

@@ -1,33 +1,11 @@
 #include "../include/rook.h"
-#include "../include/board.h"
-#include <cstdint>
-#include <cstdio>
-#include <sys/types.h>
 
-Rook::Rook(Color color, Square* square, Board& board)
-  : Figure(color, square, Type::Rook, board)
+uint64_t Rook::get_possible_moves(uint64_t pos,
+                                  bool is_white,
+                                  uint64_t friendly_squares,
+                                  uint64_t enemy_squares,
+                                  uint64_t free_squares)
 {
-}
-
-Figure* Rook::fromNotation(Color color, std::string notation, Board& board)
-{
-  std::unique_ptr<Figure> figure;
-  figure = std::make_unique<Rook>(color, board.get_square_at(notation), board);
-  board.get_square_at(notation)->set_figure(figure.get());
-  board.addFigure(std::move(figure));
-  return board.get_figure_on(notation);
-}
-
-uint64_t Rook::get_possible_moves()
-{
-  uint64_t pos = this->_square->bit();
-  bool is_white = _color == Color::White ? 1 : 0;
-  uint64_t my_squares =
-    is_white ? _board.get_white_bitmap() : _board.get_black_bitmap();
-  uint64_t enemy_squares =
-    is_white ? _board.get_black_bitmap() : _board.get_white_bitmap();
-  uint64_t free_squares = ~_board.get_any_bitmap();
-
   uint64_t moves = 0ULL;
 
   uint64_t a_file = 0x0101010101010101ULL;
@@ -36,7 +14,6 @@ uint64_t Rook::get_possible_moves()
   uint64_t rank_8 = 0xFF00000000000000ULL;
 
   uint64_t square = pos;
-
   // North
   for (int i = 1; i <= 7; i++) {
     if (square & rank_8)

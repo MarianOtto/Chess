@@ -1,54 +1,46 @@
 #include "../include/board.h"
-#include "../include/figure.h"
+#include "../include/bishop.h"
+#include "../include/king.h"
+#include "../include/knight.h"
+#include "../include/pawn.h"
+#include "../include/queen.h"
+#include "../include/rook.h"
 #include <cstdint>
-#include <memory>
+#include <stdexcept>
 #include <vector>
+
+Bishop bishop;
+Knight knight;
+King king;
+Pawn pawn;
+Queen queen;
+Rook rook;
 
 // CONSTRUCTORS
 Board::Board()
 {
-  // Add 64 Squares to the object
-  for (int idx = 0; idx <= 63; idx++) {
-    auto square = std::make_unique<Square>(idx, *this);
-    _squares.push_back(std::move(square));
-  }
   _black_bitmap = 0;
   _white_bitmap = 0;
+  _has_not_moved = 0xFFFFFFFFFFFFFFFF;
+  for (int i = 0; i < 64; i++)
+    _figures.push_back('0');
 }
 
 // GETTERS
-std::vector<std::unique_ptr<Square>>* Board::get_squares()
+std::vector<char> Board::get_figures()
 {
-  return &_squares;
+  return _figures;
 }
 
-std::vector<std::unique_ptr<Figure>>* Board::get_figures()
+char Board::get_figure_on(std::string notation)
 {
-  return &_figures;
+  Board::Index index = this->notation2index(notation);
+  return _figures[index];
 }
 
-Figure* Board::get_figure_on(std::string notation)
+char Board::get_figure_on(Index index)
 {
-  Square square = Square::fromNotation(notation, *this);
-  Square::Index index = square.index();
-  return _squares.at(index)->get_figure();
-}
-
-Figure* Board::get_figure_on(Square::Index index)
-{
-  return _squares.at(index)->get_figure();
-}
-
-Square* Board::get_square_at(std::string notation)
-{
-  Square square = Square::fromNotation(notation, *this);
-
-  return get_square_at(square.index());
-}
-
-Square* Board::get_square_at(Square::Index index)
-{
-  return _squares.at(index).get();
+  return _figures[index];
 }
 
 uint64_t Board::get_black_bitmap()
@@ -66,42 +58,146 @@ uint64_t Board::get_any_bitmap()
   return _white_bitmap | _black_bitmap;
 }
 
-// ADD FIGURE
-void Board::addFigure(std::unique_ptr<Figure> figure)
+uint64_t Board::get_has_not_moved()
 {
-  // Update bitmaps
-  if (figure->get_color() == Color::Black) {
-    _black_bitmap ^= figure->get_square()->bit();
-  } else {
-    _white_bitmap ^= figure->get_square()->bit();
+  return _has_not_moved;
+}
+
+bool Board::is_white(Index index)
+{
+  return (_figures[index] < 0x60 || _figures[index] == '0') ? 1 : 0;
+}
+
+Board::Index Board::notation2index(std::string notation)
+{
+  if (notation.size() != 2) {
+    throw std::length_error("Invalid notation size");
   }
 
-  _figures.push_back(std::move(figure));
+  char file = notation[0];
+  char rank = notation[1];
+
+  if (!(file >= 'A' && file <= 'H')) {
+    throw std::out_of_range("fromNotation[0] not between A..H");
+  } else if (!('1' <= rank && rank <= '8')) {
+    throw std::out_of_range("fromNotation[1] not between 1..8");
+  }
+
+  file = file - 'A';
+  rank = rank - '1';
+
+  return rank * 8 + file;
 }
 
-void Board::addFigure(std::unique_ptr<Figure> figure, std::string notation)
+// ADD FIGURE
+void Board::addFigure(Color color, Type type, std::string notation)
 {
-  get_square_at(notation)->set_figure(figure.get());
+  Board::Index index = notation2index(notation);
+  uint64_t bit = 1ULL << index;
 
-  addFigure(std::move(figure));
+  // Cant put a piece on an occupied square
+  if (_figures[index] != '0')
+    return;
+
+  switch (type) {
+    case Type::King:
+      _figures[index] = color == Color::White ? 'K' : 'k';
+      break;
+    case Type::Queen:
+      _figures[index] = color == Color::White ? 'Q' : 'q';
+      break;
+    case Type::Rook:
+      _figures[index] = color == Color::White ? 'R' : 'r';
+      break;
+    case Type::Bishop:
+      _figures[index] = color == Color::White ? 'B' : 'b';
+      break;
+    case Type::Knight:
+      _figures[index] = color == Color::White ? 'N' : 'n';
+      break;
+    case Type::Pawn:
+      _figures[index] = color == Color::White ? 'P' : 'p';
+      break;
+  }
+
+  // Update bitmaps
+  if (color == Color::Black) {
+    _black_bitmap |= bit;
+  } else {
+    _white_bitmap |= bit;
+  }
+
+  _has_not_moved |= bit;
 }
 
-void Board::addFigure(std::unique_ptr<Figure> figure, Square* square)
+uint64_t Board::get_possible_moves(std::string notation)
 {
-  figure->set_square(square);
-
-  get_square_at(square->index())->set_figure(figure.get());
-  addFigure(std::move(figure));
+  Board::Index index = this->notation2index(notation);
+  return get_possible_moves(index);
 }
 
-bool Board::occupied_by(Color color, std::string notation)
+uint64_t Board::get_possible_moves(Index index)
 {
-  Square* square = get_square_at(notation);
-  return square->occupied_by(color);
-}
+  uint64_t pos = 1ULL << index;
+  bool is_white = _figures[index] < 0x60 ? 1 : 0;
+  uint64_t friendly_squares = is_white ? _white_bitmap : _black_bitmap;
+  uint64_t enemy_squares = is_white ? _black_bitmap : _white_bitmap;
+  uint64_t free_squares = ~this->get_any_bitmap();
 
-bool Board::occupied_by(Color color, Square::Index index)
-{
-  Square* square = get_square_at(index);
-  return square->occupied_by(color);
+  char type = _figures[index];
+  switch (type) {
+    ///////////////////////////////////////////
+    //               PAWN
+    ///////////////////////////////////////////
+    case 'p':
+    case 'P':
+
+      return Pawn::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    ///////////////////////////////////////////
+    //               King
+    ///////////////////////////////////////////
+    case 'K':
+    case 'k':
+
+      return King::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    ///////////////////////////////////////////
+    //               Queen
+    ///////////////////////////////////////////
+    case 'Q':
+    case 'q':
+      return Queen::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    ///////////////////////////////////////////
+    //               Rook
+    ///////////////////////////////////////////
+    case 'R':
+    case 'r':
+      return Rook::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    ///////////////////////////////////////////
+    //               Bishop
+    ///////////////////////////////////////////
+    case 'B':
+    case 'b':
+      return Bishop::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    ///////////////////////////////////////////
+    //               Knight
+    ///////////////////////////////////////////
+    case 'N':
+    case 'n':
+      return Knight::get_possible_moves(
+        pos, is_white, friendly_squares, enemy_squares, free_squares);
+
+    default:
+      // Not occupied
+      return 0ULL;
+  }
 }

@@ -1,23 +1,17 @@
 #include "../include/board.h"
 #include "../include/catch.hpp"
-#include "../include/rook.h"
-#include "../include/square.h"
-#include "../include/testFigure.h"
-#include "color.h"
-#include <cstdint>
-#include <string>
 
 TEST_CASE(
   "get_possible_moves: Rook in center should have row and file to move to ",
   "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "C6", board);
+  board.addFigure(Color::White, Type::Rook, "C6");
 
   uint64_t moves = 0ULL;
   moves |= 0x0404FB0404040404;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("C6") == moves);
 }
 
 // %%%%%%%%% Edge fields %%%%%%%%%%%%%
@@ -25,80 +19,80 @@ TEST_CASE("get_possible_moves: Rook on A File should not move left",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "A7", board);
+  board.addFigure(Color::White, Type::Rook, "A7");
 
   uint64_t moves = 0ULL;
   moves |= 0x01FE010101010101;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("A7") == moves);
 }
 
 TEST_CASE("get_possible_moves: Rook on H File should not move right",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "H4", board);
+  board.addFigure(Color::White, Type::Rook, "H4");
 
   uint64_t moves = 0ULL;
   moves |= 0x808080807F808080;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("H4") == moves);
 }
 
 TEST_CASE("get_possible_moves: Rook on Rank 1 should not move down",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "C1", board);
+  board.addFigure(Color::White, Type::Rook, "C1");
 
   uint64_t moves = 0ULL;
   moves |= 0x04040404040404FB;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("C1") == moves);
 }
 
 TEST_CASE("get_possible_moves: Rook on Rank 8 should not move up",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "D8", board);
+  board.addFigure(Color::White, Type::Rook, "D8");
 
   uint64_t moves = 0ULL;
   moves |= 0xF708080808080808;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("D8") == moves);
 }
 
 TEST_CASE("get_possible_moves: Rook cant go on firendly square",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "D5", board);
+  board.addFigure(Color::White, Type::Rook, "D5");
 
-  auto fB3 = TestFigure::fromNotation(Color::White, "D7", board);
-  auto fA3 = TestFigure::fromNotation(Color::White, "B5", board);
-  auto fC4 = TestFigure::fromNotation(Color::White, "D1", board);
+  board.addFigure(Color::White, Type::Pawn, "D7");
+  board.addFigure(Color::White, Type::Pawn, "B5");
+  board.addFigure(Color::White, Type::Pawn, "D1");
 
   uint64_t moves = 0ULL;
   moves |= 0x000008F408080800;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("D5") == moves);
 }
 
 TEST_CASE("get_possible_moves: Rook can go on firendly square but stops",
           "[rook][get_possible_moves]")
 {
   Board board;
-  auto Rook = Rook::fromNotation(Color::White, "D5", board);
+  board.addFigure(Color::White, Type::Rook, "D5");
 
-  auto fB3 = TestFigure::fromNotation(Color::White, "D7", board);
-  auto fA3 = TestFigure::fromNotation(Color::Black, "B5", board);
-  auto fC4 = TestFigure::fromNotation(Color::Black, "D1", board);
+  board.addFigure(Color::White, Type::Pawn, "D7");
+  board.addFigure(Color::Black, Type::Pawn, "B5");
+  board.addFigure(Color::Black, Type::Pawn, "D1");
 
   uint64_t moves = 0ULL;
   moves |= 0x000008F608080808;
 
-  CHECK(Rook->get_possible_moves() == moves);
+  CHECK(board.get_possible_moves("D5") == moves);
 }
 
 // Castleing
